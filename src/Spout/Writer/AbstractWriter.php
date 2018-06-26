@@ -8,6 +8,7 @@ use Box\Spout\Common\Exception\SpoutException;
 use Box\Spout\Common\Helper\FileSystemHelper;
 use Box\Spout\Writer\Exception\WriterAlreadyOpenedException;
 use Box\Spout\Writer\Exception\WriterNotOpenedException;
+use Box\Spout\Writer\Style\ColumnBuilder;
 use Box\Spout\Writer\Style\StyleBuilder;
 
 /**
@@ -63,6 +64,10 @@ abstract class AbstractWriter implements WriterInterface
      * @return void
      */
     abstract protected function closeWriter();
+
+
+
+    abstract public function setColumnsStyles(string $columnsStyle) : void;
 
     /**
      *

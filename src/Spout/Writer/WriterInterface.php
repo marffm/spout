@@ -1,6 +1,7 @@
 <?php
 
 namespace Box\Spout\Writer;
+use Box\Spout\Writer\Style\ColumnBuilder;
 
 /**
  * Interface WriterInterface
@@ -88,4 +89,6 @@ interface WriterInterface
      * @return void
      */
     public function close();
+
+    public function setColumnsStyles(string $columnsStyle) : void;
 }

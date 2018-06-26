@@ -3,6 +3,7 @@
 namespace Box\Spout\Writer\XLSX\Internal;
 
 use Box\Spout\Writer\Common\Internal\AbstractWorkbook;
+use Box\Spout\Writer\Style\ColumnBuilder;
 use Box\Spout\Writer\XLSX\Helper\FileSystemHelper;
 use Box\Spout\Writer\XLSX\Helper\SharedStringsHelper;
 use Box\Spout\Writer\XLSX\Helper\StyleHelper;
@@ -35,6 +36,11 @@ class Workbook extends AbstractWorkbook
     /** @var \Box\Spout\Writer\XLSX\Helper\StyleHelper Helper to apply styles */
     protected $styleHelper;
 
+
+
+    /** @var null|string  */
+    protected $columnStyle;
+
     /**
      * @param string $tempFolder
      * @param bool $shouldUseInlineStrings
@@ -42,8 +48,15 @@ class Workbook extends AbstractWorkbook
      * @param \Box\Spout\Writer\Style\Style $defaultRowStyle
      * @throws \Box\Spout\Common\Exception\IOException If unable to create at least one of the base folders
      */
-    public function __construct($tempFolder, $shouldUseInlineStrings, $shouldCreateNewSheetsAutomatically, $defaultRowStyle)
-    {
+    public function __construct(
+        $tempFolder,
+        $shouldUseInlineStrings,
+        $shouldCreateNewSheetsAutomatically,
+        $defaultRowStyle,
+        ?string $columnStyle
+    ) {
+        $this->columnStyle = $columnStyle;
+
         parent::__construct($shouldCreateNewSheetsAutomatically, $defaultRowStyle);
 
         $this->shouldUseInlineStrings = $shouldUseInlineStrings;
@@ -86,7 +99,14 @@ class Workbook extends AbstractWorkbook
         $sheet = new Sheet($newSheetIndex, $this->internalId);
 
         $worksheetFilesFolder = $this->fileSystemHelper->getXlWorksheetsFolder();
-        $worksheet = new Worksheet($sheet, $worksheetFilesFolder, $this->sharedStringsHelper, $this->styleHelper, $this->shouldUseInlineStrings);
+        $worksheet = new Worksheet(
+            $sheet,
+            $worksheetFilesFolder,
+            $this->sharedStringsHelper,
+            $this->styleHelper,
+            $this->shouldUseInlineStrings,
+            $this->columnStyle
+        );
         $this->worksheets[] = $worksheet;
 
         return $worksheet;

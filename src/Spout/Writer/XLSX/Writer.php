@@ -3,6 +3,7 @@
 namespace Box\Spout\Writer\XLSX;
 
 use Box\Spout\Writer\AbstractMultiSheetsWriter;
+use Box\Spout\Writer\Style\ColumnBuilder;
 use Box\Spout\Writer\Style\StyleBuilder;
 use Box\Spout\Writer\XLSX\Internal\Workbook;
 
@@ -29,6 +30,9 @@ class Writer extends AbstractMultiSheetsWriter
 
     /** @var Internal\Workbook The workbook for the XLSX file */
     protected $book;
+
+    /** @var null  */
+    protected $columnsStyle = null;
 
     /**
      * Sets a custom temporary folder for creating intermediate files/folders.
@@ -65,6 +69,14 @@ class Writer extends AbstractMultiSheetsWriter
     }
 
     /**
+     *
+     */
+    public function setColumnsStyles(string $columnsStyle) : void
+    {
+        $this->columnsStyle = $columnsStyle;
+    }
+
+    /**
      * Configures the write and sets the current sheet pointer to a new sheet.
      *
      * @return void
@@ -74,7 +86,13 @@ class Writer extends AbstractMultiSheetsWriter
     {
         if (!$this->book) {
             $tempFolder = ($this->tempFolder) ? : sys_get_temp_dir();
-            $this->book = new Workbook($tempFolder, $this->shouldUseInlineStrings, $this->shouldCreateNewSheetsAutomatically, $this->defaultRowStyle);
+            $this->book = new Workbook(
+                $tempFolder,
+                $this->shouldUseInlineStrings,
+                $this->shouldCreateNewSheetsAutomatically,
+                $this->defaultRowStyle,
+                $this->columnsStyle
+            );
             $this->book->addNewSheetAndMakeItCurrent();
         }
     }
